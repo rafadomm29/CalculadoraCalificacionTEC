@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Promedio Tec21 — Tecnológico de Monterrey</title>
+  <style>
+    :root {
+      --tec-blue: #0033A0;
+      --tec-blue-dark: #002266;
+      --tec-blue-light: #0056B3;
+      --tec-accent: #00A3E0;
+      --success: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+      --light-bg: #f4f6fa;
+      --card-bg: #ffffff;
+      --text: #2c3e50;
+      --text-muted: #6c757d;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 15px rgba(0, 51, 160, 0.08);
+      --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-main);
+    }
+
+    body {
+      background-color: var(--light-bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0.8rem 1rem 3rem;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    /* Barra Superior de Autor */
+    .top-author-bar {
+      text-align: center;
+      margin-bottom: 0.8rem;
+    }
+
+    .author-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #ffffff;
+      color: var(--tec-blue-dark);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.9rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+
+    /* Encabezado */
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, var(--tec-blue-dark), var(--tec-blue));
+      color: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-top: 0.3rem;
+    }
+
+    /* Grid principal */
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 860px) {
+      .grid-container {
+        grid-template-columns: 1fr 1fr;
+      }
+      .full-width {
+        grid-column: 1 / -1;
+      }
+    }
+
+    /* Tarjetas */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--tec-blue);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+
+    /* Formularios y Campos */
+    .form-group {
+      margin-bottom: 0.8rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--text);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--tec-blue-light);
+      box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.15);
+    }
+
+    /* Filas dinámicas */
+    .dynamic-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+
+    @media (max-width: 550px) {
+      .dynamic-row {
+        grid-template-columns: 1fr 1fr auto;
+      }
+      .dynamic-row input:first-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    /* Botones */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background-color: var(--tec-blue);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background-color: var(--tec-blue-dark);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px dashed var(--tec-blue);
+      color: var(--tec-blue);
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    .btn-outline:hover {
+      background: rgba(0, 51, 160, 0.05);
+    }
+
+    .btn-danger {
+      background: #ffebee;
+      color: var(--danger);
+      padding: 0.5rem 0.7rem;
+    }
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #e9ecef;
+      color: var(--text);
+    }
+    .btn-secondary:hover {
+      background: #dde2e6;
+    }
+
+    /* Tablas */
+    .table-responsive {
+      overflow-x: auto;
+      margin-bottom: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background-color: #f8fafc;
+      text-align: left;
+      padding: 0.75rem 0.6rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 2px solid var(--border);
+    }
+
+    td {
+      padding: 0.6rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .score-banner {
+      background: #e8f4fd;
+      border: 1.5px solid #b9ddfb;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .score-banner .value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--tec-blue);
+    }
+
+    .metrics-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .summary-card .number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--tec-blue);
+      line-height: 1.2;
+    }
+
+    .summary-card .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Barra visual de distribución de créditos */
+    .breakdown-section {
+      margin-top: 1.5rem;
+    }
+
+    .progress-bar-container {
+      height: 14px;
+      display: flex;
+      border-radius: 7px;
+      overflow: hidden;
+      background: #e2e8f0;
+      margin-bottom: 1rem;
+    }
+
+    .progress-segment {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .legend-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      font-size: 0.8rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .legend-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    /* Alerta de porcentaje */
+    .alert {
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .alert-warning { background: #fff3cd; color: #856404; }
+    .alert-success { background: #d4edda; color: #155724; }
+
+    /* Footer */
+    footer {
+      margin-top: 2.5rem;
+      text-align: center;
+      padding: 1.2rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+
+    footer p {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Texto Superior -->
+    <div class="top-author-bar">
+      <div class="author-badge">
+        <span>👨‍💻 Hecho por Rafadomm</span>
+      </div>
+    </div>
+
+    <header>
+      <h1>Calculadora de Promedio Tec21</h1>
+      <p>Diseñada para Bloques con Reto, Materias y Semanas Tec</p>
+    </header>
+
+    <div class="grid-container">
+
+      <!-- ========================================== -->
+      <!-- SECCIÓN 1: CALCULADORA DE BLOQUE           -->
+      <!-- ========================================== -->
+      <section class="card">
+        <h2 class="card-title">1. Calificación por Bloque</h2>
+        <p class="card-desc">Calcula la nota integrando el Reto y sus Módulos/Materias asociadas.</p>
+
+        <!-- Reto -->
+        <div class="form-group">
+          <label>Nombre del Bloque</label>
+          <input type="text" id="bloque-nombre" placeholder="Ej. Bloque: Innovación en TI">
+        </div>
+
+        <label>Componente: Reto</label>
+        <div class="dynamic-row" style="grid-template-columns: 2fr 1fr;">
+          <input type="number" id="reto-nota" placeholder="Calificación (0-100)" min="0" max="100" step="0.1">
+          <input type="number" id="reto-peso" placeholder="Peso %" min="0" max="100" step="1">
+        </div>
+
+        <label style="margin-top: 1rem;">Componentes: Módulos / Evaluaciones</label>
+        <div id="modulos-container">
+          <!-- Filas de módulos agregadas dinámicamente -->
+        </div>
+
+        <button type="button" class="btn btn-outline" id="btn-add-modulo">+ Agregar Módulo</button>
+
+        <div id="bloque-peso-alert" class="alert alert-warning">
+          <span>⚠️</span> La suma de ponderaciones debe ser 100%. (Actual: <b id="bloque-peso-total">0%</b>)
+        </div>
+
+        <div class="score-banner">
+          <div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">CALIFICACIÓN FINAL DEL BLOQUE</div>
+            <div class="value" id="bloque-nota-final">0.0</div>
+          </div>
+          <button type="button" class="btn btn-primary" id="btn-transferir-bloque" title="Enviar esta nota a la tabla del semestre">
+            ➔ Enviar a Semestre
+          </button>
+        </div>
+      </section>
+
+      <!-- Panel informativo Tec21 -->
+      <section class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <h2 class="card-title">Estructura de Créditos Tec21</h2>
+          <p class="card-desc">Referencia rápida de equivalencias en planes de estudio Tec21:</p>
+          
+          <ul style="list-style: none; font-size: 0.88rem; line-height: 1.8;">
+            <li>🔹 <b>Semana Tec:</b> Generalmente <b>1 crédito</b> (1 semana intensiva).</li>
+            <li>🔹 <b>Materia tradicional / Teórica:</b> Habitualmente <b>2 a 3 créditos</b>.</li>
+            <li>🔹 <b>Bloque (Reto + Módulos):</b> Suele equivaler a <b>4, 6 u 8 créditos</b>.</li>
+            <li>🔹 <b>Semestre típico:</b> Promedia entre <b>18 y 20 créditos</b> en total.</li>
+          </ul>
+
+          <div style="margin-top: 1.5rem; padding: 1rem; background: #fdfdfd; border: 1px solid var(--border); border-radius: 8px;">
+            <p style="font-size: 0.8rem; color: var(--text-muted);"><b>Fórmula Ponderada Oficial:</b></p>
+            <p style="font-family: monospace; font-size: 0.9rem; color: var(--tec-blue); margin-top: 0.2rem;">
+              Promedio = Σ (Calificación × Créditos) ÷ Total de Créditos
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: right;">
+          <button type="button" class="btn btn-secondary" id="btn-limpiar-todo">
+            🔄 Reiniciar toda la calculadora
+          </button>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECCIÓN 2 & 3: SEMESTRE Y DESGLOSE         -->
+      <!-- ========================================== -->
+      <section class="card full-width">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+          <div>
+            <h2 class="card-title">2. Promedio Final del Semestre</h2>
+            <p class="card-desc" style="margin-bottom: 0;">Unidades de formación (UF) cursadas en el periodo.</p>
+          </div>
+          <button type="button" class="btn btn-primary" id="btn-add-uf">+ Agregar Unidad de Formación</button>
+        </div>
+
+        <!-- Métricas en tiempo real -->
+        <div class="metrics-summary">
+          <div class="summary-card">
+            <div class="number" id="met-promedio">0.0</div>
+            <div class="label">Promedio Ponderado</div>
+          </div>
+          <div class="summary-card">
+            <div class="number" id="met-creditos">0</div>
+            <div class="label">Créditos Cursados</div>
+          </div>
+          <div class="summary-card">
+            <div class="number" id="met-ufs">0</div>
+            <div class="label">Total Unidades</div>
+          </div>
+          <div class="summary-card">
+            <div class="number" id="met-aprobacion" style="font-size: 1.5rem; margin-top: 0.3rem;">-</div>
+            <div class="label">Estado Académico</div>
+          </div>
+        </div>
+
+        <!-- Tabla interactiva -->
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th style="min-width: 220px;">Nombre de la UF / Materia</th>
+                <th style="min-width: 140px;">Tipo</th>
+                <th style="width: 130px;">Calificación (0-100)</th>
+                <th style="width: 110px;">Créditos Tec</th>
+                <th style="width: 110px;">Impacto</th>
+                <th style="width: 50px;"></th>
+              </tr>
+            </thead>
+            <tbody id="tabla-semestre-body">
+              <!-- Filas generadas por JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Desglose visual / gráfico -->
+        <div class="breakdown-section">
+          <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--tec-blue); margin-bottom: 0.5rem;">
+            Desglose Visual del Peso por Unidad de Formación
+          </h3>
+          <div class="progress-bar-container" id="progress-container"></div>
+          <div class="legend-list" id="legend-container"></div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Texto Inferior -->
+    <footer>
+      <p>App Web hecha con amor para calcular tu promedio si eres estudiante del Tec de Monterrey como yo</p>
+    </footer>
+
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'tec21_calc_data_v1';
+
+    // Paleta de colores para el gráfico de materias
+    const PALETTE = [
+      '#0033A0', '#00A3E0', '#41B6E6', '#2E7D32', '#F57C00', 
+      '#7B1FA2', '#C2185B', '#00796B', '#D32F2F', '#512DA8'
+    ];
+
+    // --- DATOS POR DEFECTO ---
+    const defaultData = {
+      bloqueNombre: 'Bloque 1',
+      retoNota: 85,
+      retoPeso: 50,
+      modulos: [
+        { id: 1, nombre: 'Módulo 1: Teoría', nota: 90, peso: 25 },
+        { id: 2, nombre: 'Módulo 2: Laboratorio', nota: 80, peso: 25 }
+      ],
+      semestre: [
+        { id: 101, nombre: 'Bloque: Innovación en TI', tipo: 'bloque', nota: 85, creditos: 6 },
+        { id: 102, nombre: 'Matemáticas Discretas', tipo: 'materia', nota: 92, creditos: 3 },
+        { id: 103, nombre: 'Semana Tec: Liderazgo', tipo: 'semana', nota: 98, creditos: 1 }
+      ]
+    };
+
+    // Cargar desde localStorage o usar defaults
+    let appData = loadStorageData();
+
+    function loadStorageData() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          return JSON.parse(saved);
+        }
+      } catch (e) {
+        console.error('Error al cargar datos locales', e);
+      }
+      return JSON.parse(JSON.stringify(defaultData));
+    }
+
+    function saveStorageData() {
+      try {
+        appData.bloqueNombre = bloqueNombre.value;
+        appData.retoNota = retoNotaInput.value === '' ? '' : parseFloat(retoNotaInput.value);
+        appData.retoPeso = retoPesoInput.value === '' ? '' : parseFloat(retoPesoInput.value);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+      } catch (e) {
+        console.error('Error al guardar datos locales', e);
+      }
+    }
+
+    // --- ELEMENTOS DOM ---
+    const modulosContainer = document.getElementById('modulos-container');
+    const btnAddModulo = document.getElementById('btn-add-modulo');
+    const retoNotaInput = document.getElementById('reto-nota');
+    const retoPesoInput = document.getElementById('reto-peso');
+    const bloqueFinalNota = document.getElementById('bloque-nota-final');
+    const bloquePesoTotalEl = document.getElementById('bloque-peso-total');
+    const bloqueAlert = document.getElementById('bloque-peso-alert');
+    const btnTransferir = document.getElementById('btn-transferir-bloque');
+    const bloqueNombre = document.getElementById('bloque-nombre');
+
+    const tablaSemestreBody = document.getElementById('tabla-semestre-body');
+    const btnAddUF = document.getElementById('btn-add-uf');
+    const metPromedio = document.getElementById('met-promedio');
+    const metCreditos = document.getElementById('met-creditos');
+    const metUfs = document.getElementById('met-ufs');
+    const metAprobacion = document.getElementById('met-aprobacion');
+    const progressContainer = document.getElementById('progress-container');
+    const legendContainer = document.getElementById('legend-container');
+    const btnLimpiar = document.getElementById('btn-limpiar-todo');
+
+    // Inicializar inputs del bloque con datos persistidos
+    bloqueNombre.value = appData.bloqueNombre ?? '';
+    retoNotaInput.value = appData.retoNota ?? '';
+    retoPesoInput.value = appData.retoPeso ?? '';
+
+    // =========================================================================
+    // SECCIÓN 1: LÓGICA DE BLOQUE
+    // =========================================================================
+    function renderModulos() {
+      modulosContainer.innerHTML = '';
+      appData.modulos.forEach((mod, index) => {
+        const row = document.createElement('div');
+        row.className = 'dynamic-row';
+        row.innerHTML = `
+          <input type="text" placeholder="Nombre del módulo" value="${mod.nombre ?? ''}" oninput="actualizarModulo(${index}, 'nombre', this.value)">
+          <input type="number" placeholder="Nota" min="0" max="100" step="0.1" value="${mod.nota ?? ''}" oninput="actualizarModulo(${index}, 'nota', this.value)">
+          <input type="number" placeholder="Peso %" min="0" max="100" step="1" value="${mod.peso ?? ''}" oninput="actualizarModulo(${index}, 'peso', this.value)">
+          <button type="button" class="btn btn-danger" onclick="eliminarModulo(${index})" title="Eliminar módulo">✕</button>
+        `;
+        modulosContainer.appendChild(row);
+      });
+      calcularBloque();
+    }
+
+    function addModulo() {
+      appData.modulos.push({ id: Date.now(), nombre: `Módulo ${appData.modulos.length + 1}`, nota: 80, peso: 10 });
+      saveStorageData();
+      renderModulos();
+    }
+
+    function eliminarModulo(index) {
+      appData.modulos.splice(index, 1);
+      saveStorageData();
+      renderModulos();
+    }
+
+    function actualizarModulo(index, campo, valor) {
+      if (campo === 'nota' || campo === 'peso') {
+        appData.modulos[index][campo] = valor === '' ? '' : (parseFloat(valor) || 0);
+      } else {
+        appData.modulos[index][campo] = valor;
+      }
+      saveStorageData();
+      calcularBloque();
+    }
+
+    function calcularBloque() {
+      const retoNota = parseFloat(retoNotaInput.value) || 0;
+      const retoPeso = parseFloat(retoPesoInput.value) || 0;
+
+      let sumaPonderada = (retoNota * retoPeso);
+      let pesoTotal = retoPeso;
+
+      appData.modulos.forEach(m => {
+        const n = parseFloat(m.nota) || 0;
+        const p = parseFloat(m.peso) || 0;
+        sumaPonderada += (n * p);
+        pesoTotal += p;
+      });
+
+      bloquePesoTotalEl.innerText = `${pesoTotal}%`;
+
+      if (Math.abs(pesoTotal - 100) < 0.01) {
+        bloqueAlert.className = 'alert alert-success';
+        bloqueAlert.innerHTML = `<span>✓</span> Ponderaciones correctas (100%).`;
+      } else {
+        bloqueAlert.className = 'alert alert-warning';
+        bloqueAlert.innerHTML = `<span>⚠️</span> La suma debe dar 100%. (Actual: <b>${pesoTotal}%</b>)`;
+      }
+
+      const calificacionFinal = pesoTotal > 0 ? (sumaPonderada / pesoTotal) : 0;
+      bloqueFinalNota.innerText = calificacionFinal.toFixed(1);
+      return calificacionFinal;
+    }
+
+    bloqueNombre.addEventListener('input', saveStorageData);
+    retoNotaInput.addEventListener('input', () => { saveStorageData(); calcularBloque(); });
+    retoPesoInput.addEventListener('input', () => { saveStorageData(); calcularBloque(); });
+    btnAddModulo.addEventListener('click', addModulo);
+
+    // Enviar Bloque a la tabla del semestre
+    btnTransferir.addEventListener('click', () => {
+      const notaBloque = calcularBloque();
+      const nombre = bloqueNombre.value.trim() || 'Bloque';
+      
+      appData.semestre.push({
+        id: Date.now(),
+        nombre: nombre,
+        tipo: 'bloque',
+        nota: parseFloat(notaBloque.toFixed(1)),
+        creditos: 6
+      });
+      saveStorageData();
+      renderSemestre();
+      
+      document.querySelector('.full-width').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // =========================================================================
+    // SECCIÓN 2 & 3: LÓGICA DE SEMESTRE Y MÉTRICAS
+    // =========================================================================
+    function renderSemestre() {
+      tablaSemestreBody.innerHTML = '';
+      
+      const totalCreditos = appData.semestre.reduce((acc, curr) => acc + (parseFloat(curr.creditos) || 0), 0);
+
+      appData.semestre.forEach((uf, index) => {
+        const tr = document.createElement('tr');
+        const impacto = totalCreditos > 0 ? (((parseFloat(uf.creditos) || 0) / totalCreditos) * 100).toFixed(1) : 0;
+
+        tr.innerHTML = `
+          <td>
+            <input type="text" value="${uf.nombre ?? ''}" oninput="actualizarUF(${index}, 'nombre', this.value)" placeholder="Nombre de materia">
+          </td>
+          <td>
+            <select onchange="actualizarUF(${index}, 'tipo', this.value)">
+              <option value="bloque" ${uf.tipo === 'bloque' ? 'selected' : ''}>Bloque</option>
+              <option value="materia" ${uf.tipo === 'materia' ? 'selected' : ''}>Materia Tradicional</option>
+              <option value="semana" ${uf.tipo === 'semana' ? 'selected' : ''}>Semana Tec</option>
+            </select>
+          </td>
+          <td>
+            <input type="number" min="0" max="100" step="0.1" value="${uf.nota ?? ''}" oninput="actualizarUF(${index}, 'nota', this.value)">
+          </td>
+          <td>
+            <input type="number" min="1" max="15" step="1" value="${uf.creditos ?? ''}" oninput="actualizarUF(${index}, 'creditos', this.value)">
+          </td>
+          <td style="font-weight: 600; color: var(--tec-blue);">
+            ${impacto}%
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger" onclick="eliminarUF(${index})" title="Eliminar">✕</button>
+          </td>
+        `;
+        tablaSemestreBody.appendChild(tr);
+      });
+
+      calcularMetricasSemestre();
+      renderGrafico();
+    }
+
+    function addUF() {
+      appData.semestre.push({
+        id: Date.now(),
+        nombre: `Materia / UF ${appData.semestre.length + 1}`,
+        tipo: 'materia',
+        nota: 85,
+        creditos: 3
+      });
+      saveStorageData();
+      renderSemestre();
+    }
+
+    function eliminarUF(index) {
+      appData.semestre.splice(index, 1);
+      saveStorageData();
+      renderSemestre();
+    }
+
+    function actualizarUF(index, campo, valor) {
+      if (campo === 'nota' || campo === 'creditos') {
+        appData.semestre[index][campo] = valor === '' ? '' : (parseFloat(valor) || 0);
+      } else {
+        appData.semestre[index][campo] = valor;
+      }
+      saveStorageData();
+      calcularMetricasSemestre();
+      renderGrafico();
+      
+      const totalCreditos = appData.semestre.reduce((acc, curr) => acc + (parseFloat(curr.creditos) || 0), 0);
+      const rows = tablaSemestreBody.querySelectorAll('tr');
+      if (rows[index]) {
+        const impacto = totalCreditos > 0 ? (((parseFloat(appData.semestre[index].creditos) || 0) / totalCreditos) * 100).toFixed(1) : 0;
+        rows[index].children[4].innerText = `${impacto}%`;
+      }
+    }
+
+    function calcularMetricasSemestre() {
+      let sumaPonderada = 0;
+      let totalCreditos = 0;
+
+      appData.semestre.forEach(uf => {
+        const nota = parseFloat(uf.nota) || 0;
+        const creds = parseFloat(uf.creditos) || 0;
+        sumaPonderada += (nota * creds);
+        totalCreditos += creds;
+      });
+
+      const promedio = totalCreditos > 0 ? (sumaPonderada / totalCreditos) : 0;
+
+      metPromedio.innerText = promedio.toFixed(2);
+      metCreditos.innerText = totalCreditos;
+      metUfs.innerText = appData.semestre.length;
+
+      if (appData.semestre.length === 0 || totalCreditos === 0) {
+        metAprobacion.innerText = '-';
+        metAprobacion.style.color = 'var(--text-muted)';
+      } else if (promedio >= 70) {
+        metAprobacion.innerText = 'Aprobado';
+        metAprobacion.style.color = 'var(--success)';
+      } else {
+        metAprobacion.innerText = 'Reprobado';
+        metAprobacion.style.color = 'var(--danger)';
+      }
+    }
+
+    function renderGrafico() {
+      progressContainer.innerHTML = '';
+      legendContainer.innerHTML = '';
+
+      const totalCreditos = appData.semestre.reduce((acc, curr) => acc + (parseFloat(curr.creditos) || 0), 0);
+      if (totalCreditos <= 0) return;
+
+      appData.semestre.forEach((uf, index) => {
+        const creds = parseFloat(uf.creditos) || 0;
+        if (creds <= 0) return;
+
+        const color = PALETTE[index % PALETTE.length];
+        const porcentaje = (creds / totalCreditos) * 100;
+
+        const segment = document.createElement('div');
+        segment.className = 'progress-segment';
+        segment.style.width = `${porcentaje}%`;
+        segment.style.backgroundColor = color;
+        segment.title = `${uf.nombre}: ${creds} créditos (${porcentaje.toFixed(1)}%)`;
+        progressContainer.appendChild(segment);
+
+        const legendItem = document.createElement('div');
+        legendItem.className = 'legend-item';
+        legendItem.innerHTML = `
+          <div class="legend-color" style="background-color: ${color};"></div>
+          <span>${uf.nombre || 'Sin nombre'} (${creds} cr - ${porcentaje.toFixed(0)}%)</span>
+        `;
+        legendContainer.appendChild(legendItem);
+      });
+    }
+
+    btnAddUF.addEventListener('click', addUF);
+
+    // =========================================================================
+    // REINICIAR TODO
+    // =========================================================================
+    btnLimpiar.addEventListener('click', () => {
+      if (confirm('¿Deseas reiniciar todos los valores y borrar el registro guardado?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        retoNotaInput.value = '';
+        retoPesoInput.value = '';
+        bloqueNombre.value = 'Bloque 1';
+        appData = {
+          bloqueNombre: 'Bloque 1',
+          retoNota: '',
+          retoPeso: '',
+          modulos: [],
+          semestre: []
+        };
+        renderModulos();
+        renderSemestre();
+      }
+    });
+
+    // --- INICIALIZACIÓN ---
+    renderModulos();
+    renderSemestre();
+  </script>
+</body>
+</html>
